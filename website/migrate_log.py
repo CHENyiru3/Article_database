@@ -105,22 +105,15 @@ def create_frontmatter(article: dict, include_content: bool = False) -> str:
     if categories:
         lines.append(f"categories: [{', '.join(f'\"{c}\"' for c in categories)}]")
 
-    # Add tags
+    # Add tags (escape special characters)
     tags = meta.get('tags', [])
     if tags:
-        lines.append(f"tags: [{', '.join(f'\"{t}\"' for t in tags)}]")
+        escaped_tags = [t.replace('"', '\\"') for t in tags]
+        lines.append(f"tags: [{', '.join(f'\"{t}\"' for t in escaped_tags)}]")
 
     # Add year
     if meta.get('year'):
         lines.append(f"year: {meta['year']}")
-
-    # Add PDF URL
-    if meta.get('pdf_url'):
-        lines.append(f'pdf_url: "{meta["pdf_url"]}"')
-
-    # Add source
-    if meta.get('source'):
-        lines.append(f'source: "{meta["source"]}"')
 
     # Add description/summary
     if meta.get('summary'):
@@ -139,7 +132,7 @@ def create_frontmatter(article: dict, include_content: bool = False) -> str:
         lines.append('')
     else:
         lines.append('')
-        lines.append(f"_{article['title']}_ - A research article on {', '.join(tags[:3]) if tags else 'various topics'}.")
+        lines.append(f"_{article['title']}_ - A research article.")
         lines.append('')
 
     return '\n'.join(lines)

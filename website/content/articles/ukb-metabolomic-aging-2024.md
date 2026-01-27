@@ -1,12 +1,10 @@
 ---
 title: "UKB Metabolomic Aging 2024"
-date: 2026-01-28
+date: 2026-01-28T00:57:08+08:00
 draft: false
 categories: ["comp_bio/analysis"]
 tags: ["metabolomics", "biological aging", "UK Biobank", "NMR biomarkers"]
 year: 2024
-pdf_url: "/pdfs/Comp_Bio/Analysis/UKB_Metabolomic_Aging_2024.pdf"
-source: "bachelor_thesis"
 description: |
   Analyzes 325 NMR biomarkers from 250,341 UK Biobank participants. Identifies 54 aging-related biomarkers and develops a metabolomic aging score that outperforms other metrics in predicting mortality risk.
 ---
