@@ -47,11 +47,13 @@ jobs:
         working-directory: ./website
         run: npm ci
 
+      - name: Build Tailwind CSS
+        working-directory: ./website
+        run: npx tailwindcss -i ./assets/css/main.css -o ./static/assets/css/main.css --minify
+
       - name: Build with Hugo
         working-directory: ./website
-        run: |
-          npm run build
-          npx tailwindcss -i ./assets/css/main.css -o ./static/assets/css/main.css --minify
+        run: hugo --minify
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
