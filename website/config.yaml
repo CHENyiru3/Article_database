@@ -1,4 +1,4 @@
-baseURL: "/"
+baseURL: "/Article_database/"
 languageCode: "en-us"
 title: "Academic Article Database"
 theme: []
