@@ -1,6 +1,6 @@
 ---
 title: "FuseMoE Multimodal 2024"
-date: 2026-01-28T01:15:26+08:00
+date: 2026-01-28T01:28:05+08:00
 draft: false
 categories: ["cs_ai"]
 tags: ["mixture of experts", "multimodal fusion", "transformers"]
