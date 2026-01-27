@@ -1,0 +1,83 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# Media settings
+media_folder: "website/static/pdfs"
+public_folder: "/pdfs"
+
+# Collections
+collections:
+  # Articles collection
+  - name: "articles"
+    label: "Articles"
+    folder: "website/content/articles"
+    create: true
+    slug: "{{year}}_{{slug}}"
+    format: "yaml-frontmatter"
+    extension: "md"
+
+    # Editor settings
+    editor:
+      preview: true
+      publish_mode: editorial_workflow
+
+    # List view
+    listable: true
+    index_name: "title"
+
+    # Fields
+    fields:
+      - {label: "Title", name: "title", widget: "string", required: true}
+      - {label: "Date", name: "date", widget: "datetime", default: "", required: false}
+      - {label: "Year", name: "year", widget: "select", options: [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026]}
+      - {label: "Categories", name: "categories", widget: "select", multiple: true, required: false,
+         options: ["biological", "cs_ai", "comp_bio/analysis", "comp_bio/modelling", "others"]}
+      - {label: "Tags", name: "tags", widget: "list", required: false}
+      - {label: "PDF URL", name: "pdf_url", widget: "string", required: false,
+         hint: "Path to PDF relative to static folder, e.g., /pdfs/biological/Paper_2024.pdf"}
+      - {label: "Original File", name: "original_file", widget: "string", required: false}
+      - {label: "Source", name: "source", widget: "string", required: false,
+         hint: "Where you found this paper (e.g., bachelor_thesis, TCR/References)"}
+      - {label: "Description", name: "description", widget: "text", required: false,
+         hint: "Brief summary for search results and cards"}
+      - {label: "Summary", name: "summary", widget: "markdown", required: false,
+         hint: "Detailed abstract/summary"}
+      - {label: "Notes", name: "notes", widget: "markdown", required: false,
+         hint: "Your personal notes about this paper"}
+      - {label: "External Links", name: "links", widget: "list", required: false,
+         fields:
+           - {label: "URL", name: "url", widget: "string"}
+           - {label: "Label", name: "label", widget: "string"}
+      - {label: "Date Organized", name: "date_organized", widget: "datetime", required: false}
+      - {label: "Draft", name: "draft", widget: "boolean", default: false}
+
+    # Filtering
+    filter:
+      field: categories
+
+    # Custom preview
+    preview_path: "articles/{{slug}}"
+
+  # Tags collection (for reference)
+  - name: "tags"
+    label: "Tags"
+    folder: "website/content/tags"
+    create: true
+    slug: "{{slug}}"
+    format: "yaml-frontmatter"
+    extension: "md"
+
+    fields:
+      - {label: "Name", name: "title", widget: "string", required: true}
+      - {label: "Description", name: "description", widget: "text", required: false}
+
+# Custom styles
+display_url: https://yourusername.github.io
+show_preview_links: true
+
+# Search
+searchable: true
+
+# Hugo-specific settings
+hugo_version: "0.120.0"

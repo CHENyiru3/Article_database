@@ -1,0 +1,274 @@
+{{ define "main" }}
+<article class="py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {{/* Breadcrumb */}}
+    <nav class="flex items-center gap-2 text-sm text-slate-500 mb-6">
+      <a href="/" class="hover:text-primary-600 transition-colors">Home</a>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+      {{ $firstCategory := index .Params.categories 0 }}
+      <a href="/categories/{{ $firstCategory }}/"
+         class="hover:text-primary-600 transition-colors capitalize">
+        {{ replace $firstCategory "_" " " | title }}
+      </a>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+      <span class="text-slate-900 truncate">{{ .Title | truncate 40 }}</span>
+    </nav>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {{/* Main content */}}
+      <div class="lg:col-span-2">
+        {{/* Header */}}
+        <header class="mb-8">
+          <div class="flex flex-wrap gap-2 mb-4">
+            {{ range .Params.categories }}
+              <a href="/categories/{{ . }}/"
+                 class="badge bg-primary-100 text-primary-800 hover:bg-primary-200 transition-colors capitalize">
+                {{ replace . "_" " " | title }}
+              </a>
+            {{ end }}
+          </div>
+
+          <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+            {{ .Title }}
+          </h1>
+
+          {{ if .Params.summary }}
+            <p class="text-lg text-slate-600 leading-relaxed">
+              {{ .Params.summary }}
+            </p>
+          {{ end }}
+
+          {{/* Meta info */}}
+          <div class="flex flex-wrap items-center gap-4 mt-6 text-sm text-slate-500">
+            {{ if .Params.year }}
+              <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                {{ .Params.year }}
+              </span>
+            {{ end }}
+
+            {{ if .Params.source }}
+              <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                </svg>
+                {{ .Params.source }}
+              </span>
+            {{ end }}
+
+            {{ if .Params.original_file }}
+              <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                {{ .Params.original_file }}
+              </span>
+            {{ end }}
+          </div>
+
+          {{/* Action buttons */}}
+          <div class="flex flex-wrap gap-3 mt-6">
+            {{ if .Params.pdf_url }}
+              <a href="{{ .Params.pdf_url }}"
+                 target="_blank" rel="noopener noreferrer"
+                 class="btn--primary">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                </svg>
+                Open PDF
+              </a>
+            {{ end }}
+            <button type="button"
+                    class="btn--secondary"
+                    id="annotation-toggle">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+              </svg>
+              Add Note
+            </button>
+            <button type="button"
+                    class="btn--outline"
+                    id="share-button">
+              <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+              </svg>
+              Share
+            </button>
+          </div>
+        </header>
+
+        {{/* Content */}}
+        <div class="prose prose-slate max-w-none">
+          {{ .Content }}
+        </div>
+
+        {{/* Notes section */}}
+        {{ if .Params.notes }}
+          <section class="mt-8 p-6 bg-amber-50 rounded-xl border border-amber-200">
+            <h2 class="text-lg font-semibold text-amber-900 mb-4 flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+              </svg>
+              My Notes
+            </h2>
+            <div class="prose prose-amber max-w-none">
+              {{ .Params.notes | markdownify }}
+            </div>
+          </section>
+        {{ end }}
+      </div>
+
+      {{/* Sidebar */}}
+      <aside class="lg:col-span-1 space-y-6">
+        {{/* PDF Viewer */}}
+        {{ if .Params.pdf_url }}
+          <div class="card p-4">
+            <h3 class="font-semibold text-slate-900 mb-3">PDF Preview</h3>
+            <div class="aspect-[3/4] bg-slate-100 rounded-lg flex items-center justify-center">
+              <a href="{{ .Params.pdf_url }}"
+                 target="_blank" rel="noopener noreferrer"
+                 class="flex flex-col items-center text-primary-600 hover:text-primary-700 p-8">
+                <svg class="w-16 h-16 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                </svg>
+                <span class="text-sm font-medium">Click to open PDF</span>
+              </a>
+            </div>
+          </div>
+        {{ end }}
+
+        {{/* Tags */}}
+        {{ if .Params.tags }}
+          <div class="card p-4">
+            <h3 class="font-semibold text-slate-900 mb-3">Topics</h3>
+            <div class="flex flex-wrap gap-2">
+              {{ range .Params.tags }}
+                <a href="/tags/{{ . | urlize }}/"
+                   class="badge bg-slate-100 text-slate-700 hover:bg-primary-100 hover:text-primary-700 transition-colors">
+                  {{ . }}
+                </a>
+              {{ end }}
+            </div>
+          </div>
+        {{ end }}
+
+        {{/* External links */}}
+        {{ if .Params.links }}
+          <div class="card p-4">
+            <h3 class="font-semibold text-slate-900 mb-3">Related Links</h3>
+            <nav class="space-y-2">
+              {{ range .Params.links }}
+                <a href="{{ .url }}"
+                   target="_blank" rel="noopener noreferrer"
+                   class="flex items-center gap-2 text-sm text-primary-600 hover:text-primary-700 hover:underline">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                  </svg>
+                  {{ .label | default .url }}
+                </a>
+              {{ end }}
+            </nav>
+          </div>
+        {{ end }}
+
+        {{/* Edit in CMS */}}
+        <div class="card p-4">
+          <h3 class="font-semibold text-slate-900 mb-3">Admin</h3>
+          <a href="/admin/"
+             class="btn--outline btn--sm w-full justify-center">
+            Edit Article
+          </a>
+        </div>
+      </aside>
+    </div>
+
+    {{/* Related articles */}}
+    {{ $related := .Site.RegularPages.Related . | first 6 }}
+    {{ if gt (len $related) 0 }}
+      <section class="mt-16 pt-8 border-t border-slate-200">
+        <h2 class="text-2xl font-bold text-slate-900 mb-6">Related Articles</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {{ range $related }}
+            {{ partial "article-card.html" (dict "Page" . "Ctx" $) }}
+          {{ end }}
+        </div>
+      </section>
+    {{ end }}
+  </div>
+</article>
+
+{{/* Annotation Modal */}}
+<div id="annotation-modal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal__header">
+      <h3 class="font-semibold text-slate-900">Add Note</h3>
+    </div>
+    <form id="annotation-form" class="modal__body">
+      <textarea name="note"
+                rows="6"
+                class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                placeholder="Write your notes about this article..."></textarea>
+      <input type="hidden" name="article" value="{{ .File.Path }}">
+    </form>
+    <div class="modal__footer">
+      <button type="button" class="btn--secondary" id="cancel-annotation">Cancel</button>
+      <button type="submit" form="annotation-form" class="btn--primary">Save Note</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Annotation modal toggle
+  const annotationToggle = document.getElementById('annotation-toggle');
+  const annotationModal = document.getElementById('annotation-modal');
+  const cancelAnnotation = document.getElementById('cancel-annotation');
+
+  if (annotationToggle && annotationModal) {
+    annotationToggle.addEventListener('click', () => {
+      annotationModal.classList.remove('hidden');
+    });
+
+    cancelAnnotation.addEventListener('click', () => {
+      annotationModal.classList.add('hidden');
+    });
+
+    annotationModal.addEventListener('click', (e) => {
+      if (e.target === annotationModal) {
+        annotationModal.classList.add('hidden');
+      }
+    });
+  }
+
+  // Share functionality
+  const shareButton = document.getElementById('share-button');
+  if (shareButton) {
+    shareButton.addEventListener('click', async () => {
+      if (navigator.share) {
+        await navigator.share({
+          title: '{{ .Title }}',
+          text: '{{ .Description | default .Summary }}',
+          url: '{{ .Permalink }}',
+        });
+      } else {
+        await navigator.clipboard.writeText('{{ .Permalink }}');
+        alert('Link copied to clipboard!');
+      }
+    });
+  }
+</script>
+{{ end }}

@@ -1,0 +1,45 @@
+{{ define "main" }}
+<section class="py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-slate-900 mb-2">{{ .Title }}</h1>
+      <p class="text-slate-600">
+        Kind: {{ .Kind }}<br>
+        Section: {{ .Section }}<br>
+        Pages in .Pages: {{ len .Pages }}<br>
+        RegularPages in articles: {{ len (where .Site.RegularPages "Section" "articles") }}<br>
+        All RegularPages: {{ len .Site.RegularPages }}
+      </p>
+    </header>
+
+    {{/* Pages list */}}
+    {{ if gt (len .Pages) 0 }}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {{ range .Pages }}
+          <div class="article-card group">
+            <a href="{{ .RelPermalink }}" class="block p-4">
+              <h3 class="article-card__title mb-2">{{ .Title }}</h3>
+              <p class="text-sm text-slate-500">URL: {{ .RelPermalink }}</p>
+            </a>
+          </div>
+        {{ end }}
+      </div>
+    {{ else }}
+      <div class="empty-state">
+        <p class="text-slate-500">No pages found in this section.</p>
+        <p class="text-sm text-slate-400 mt-2">Total RegularPages: {{ len (where .Site.RegularPages "Section" "articles") }}</p>
+
+        {{/* Debug: List all regular pages */}}
+        <div class="mt-8">
+          <h4 class="font-semibold mb-2">All Regular Pages:</h4>
+          <ul class="text-sm text-slate-600">
+            {{ range .Site.RegularPages }}
+              <li>{{ .Section }}/{{ .Title }} ({{ .Kind }})</li>
+            {{ end }}
+          </ul>
+        </div>
+      </div>
+    {{ end }}
+  </div>
+</section>
+{{ end }}

@@ -1,0 +1,46 @@
+{{ define "main" }}
+<article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <header class="mb-8">
+    <nav class="flex items-center gap-2 text-sm text-slate-500 mb-4">
+      <a href="/" class="hover:text-primary-600 transition-colors">Home</a>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+      <a href="/articles/" class="hover:text-primary-600 transition-colors">Articles</a>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+      </svg>
+      <span class="text-slate-900">{{ .Title }}</span>
+    </nav>
+
+    <h1 class="text-3xl font-bold text-slate-900 mb-4">{{ .Title }}</h1>
+
+    <div class="flex flex-wrap items-center gap-4 text-sm text-slate-600">
+      {{ if .Params.year }}
+        <span class="flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          </svg>
+          {{ .Params.year }}
+        </span>
+      {{ end }}
+
+      {{ if .Params.categories }}
+        <span class="flex items-center gap-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+          </svg>
+          {{ range first 1 .Params.categories }}{{ replace . "_" " " | title }}{{ end }}
+        </span>
+      {{ end }}
+    </div>
+  </header>
+
+  {{/* Main content */}}
+  <div class="prose prose-slate max-w-none">
+    {{ .Content }}
+  </div>
+</article>
+{{ end }}

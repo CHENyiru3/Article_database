@@ -1,0 +1,194 @@
+{{ define "main" }}
+<section class="bg-white border-b border-slate-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    {{/* Hero section */}}
+    <div class="text-center max-w-3xl mx-auto">
+      <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
+        <span class="gradient-text">Academic Article</span> Database
+      </h1>
+      <p class="text-lg text-slate-600 mb-8">
+        A curated collection of {{ len (where .Site.RegularPages "Section" "articles") }} research papers
+        in computational biology, AI, and related fields. Browse, search, and annotate your favorite papers.
+      </p>
+
+      {{/* Search bar */}}
+      <form action="/search/" method="get" class="search-bar mx-auto">
+        <svg class="search-bar__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="text"
+               name="q"
+               placeholder="Search articles by title, topic, or keyword..."
+               class="search-bar__input">
+      </form>
+    </div>
+
+    {{/* Quick stats */}}
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+      <div class="stat-card">
+        <div class="stat-card__icon stat-card__icon--primary">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+          </svg>
+        </div>
+        <div>
+          <div class="stat-card__value">{{ len (where .Site.RegularPages "Section" "articles") }}</div>
+          <div class="stat-card__label">Total Articles</div>
+        </div>
+      </div>
+
+      {{/* Category counts using Scratch */}}
+      {{ $allArticles := where .Site.RegularPages "Section" "articles" }}
+      {{ $.Scratch.Set "biological" 0 }}
+      {{ $.Scratch.Set "csai" 0 }}
+      {{ $.Scratch.Set "analysis" 0 }}
+      {{ $.Scratch.Set "modelling" 0 }}
+      {{ range $allArticles }}
+        {{ if in .Params.categories "biological" }}{{ $.Scratch.Add "biological" 1 }}{{ end }}
+        {{ if in .Params.categories "cs_ai" }}{{ $.Scratch.Add "csai" 1 }}{{ end }}
+        {{ if in .Params.categories "comp_bio/analysis" }}{{ $.Scratch.Add "analysis" 1 }}{{ end }}
+        {{ if in .Params.categories "comp_bio/modelling" }}{{ $.Scratch.Add "modelling" 1 }}{{ end }}
+      {{ end }}
+
+      <a href="/categories/biological/" class="stat-card group">
+        <div class="stat-card__icon stat-card__icon--success group-hover:scale-110 transition-transform">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="stat-card__value">{{ $.Scratch.Get "biological" }}</div>
+          <div class="stat-card__label">Biological</div>
+        </div>
+      </a>
+
+      <a href="/categories/cs_ai/" class="stat-card group">
+        <div class="stat-card__icon stat-card__icon--violet group-hover:scale-110 transition-transform">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="stat-card__value">{{ $.Scratch.Get "csai" }}</div>
+          <div class="stat-card__label">CS_AI</div>
+        </div>
+      </a>
+
+      <a href="/categories/comp_bio/modelling/" class="stat-card group">
+        <div class="stat-card__icon stat-card__icon--primary group-hover:scale-110 transition-transform">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+          </svg>
+        </div>
+        <div>
+          <div class="stat-card__value">{{ $.Scratch.Get "modelling" }}</div>
+          <div class="stat-card__label">Modelling</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+{{/* Categories section */}}
+<section class="py-12 bg-slate-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-2xl font-bold text-slate-900 mb-6">Browse by Category</h2>
+    <div class="flex flex-wrap gap-4">
+      <a href="/categories/biological/" class="category-pill category-pill--biological">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+        </svg>
+        Biological
+      </a>
+      <a href="/categories/cs_ai/" class="category-pill category-pill--cs-ai">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        </svg>
+        CS_AI
+      </a>
+      <a href="/categories/comp_bio/analysis/" class="category-pill category-pill--analysis">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+        </svg>
+        Comp_Bio Analysis
+      </a>
+      <a href="/categories/comp_bio/modelling/" class="category-pill category-pill--modelling">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+        </svg>
+        Comp_Bio Modelling
+      </a>
+    </div>
+  </div>
+</section>
+
+{{/* Recent articles section */}}
+<section class="py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-bold text-slate-900">Recent Articles</h2>
+      <a href="/articles/" class="btn--outline btn--sm">
+        View All
+        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+
+    {{/* Get recent articles */}}
+    {{ $recentArticles := where .Site.RegularPages "Section" "articles" | first 8 }}
+
+    {{ if gt (len $recentArticles) 0 }}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {{ range $recentArticles }}
+          {{ partial "article-card.html" (dict "Page" . "Ctx" $) }}
+        {{ end }}
+      </div>
+    {{ else }}
+      <div class="empty-state">
+        <svg class="empty-state__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+        </svg>
+        <h3 class="empty-state__title">No articles yet</h3>
+        <p class="empty-state__message">
+          Articles will appear here once you add them to the database.
+        </p>
+      </div>
+    {{ end }}
+  </div>
+</section>
+
+{{/* Popular tags section */}}
+<section class="py-12 bg-slate-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 class="text-2xl font-bold text-slate-900 mb-6">Popular Topics</h2>
+    <div class="tag-cloud">
+      {{ range first 20 (.Site.Taxonomies.tags.ByCount) }}
+        <a href="/tags/{{ .Term | urlize }}/"
+           class="tag-cloud__tag">
+          {{ .Term }}
+          <span class="tag-cloud__count">{{ .Count }}</span>
+        </a>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}
+
+{{/* Helper function for dict */}}
+{{- define "dict" -}}
+  {{- range $k, $v := . -}}
+    {{- $.Page.Scratch.Set $k $v -}}
+  {{- end -}}
+  {{- $.Page.Scratch.Get "ctx" -}}
+{{- end -}}

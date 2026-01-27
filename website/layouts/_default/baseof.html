@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang }}" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="{{ .Site.Params.description }}">
+  <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+  <link rel="icon" type="image/svg+xml" href="{{ .Site.Params.favicon | default "/favicon.ico" }}">
+  <link rel="stylesheet" href="/assets/css/main.css">
+
+  {{/* Open Graph */}}
+  <meta property="og:title" content="{{ .Title }}">
+  <meta property="og:description" content="{{ .Description | default .Site.Params.description }}">
+  <meta property="og:type" content="{{ if .IsHome }}website{{ else }}article{{ end }}">
+  <meta property="og:url" href="{{ .Permalink }}">
+  <meta property="og:site_name" content="{{ .Site.Title }}">
+
+  {{/* Twitter Card */}}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ .Title }}">
+  <meta name="twitter:description" content="{{ .Description | default .Site.Params.description }}">
+
+  {{/* RSS feed */}}
+  {{ range .AlternativeOutputFormats }}
+    <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink | safeURL }}">
+  {{ end }}
+
+  {{/* Custom head */}}
+  {{ block "head" . }}{{ end }}
+</head>
+<body class="min-h-screen flex flex-col">
+  {{/* Header */}}
+  {{ partial "header.html" . }}
+
+  {{/* Main content */}}
+  <main class="flex-grow">
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  {{/* Footer */}}
+  {{ partial "footer.html" . }}
+
+  {{/* Scripts */}}
+  <script src="/assets/js/main.js" defer></script>
+
+  {{/* Custom scripts */}}
+  {{ block "scripts" . }}{{ end }}
+</body>
+</html>

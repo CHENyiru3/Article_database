@@ -1,0 +1,115 @@
+baseURL: "/"
+languageCode: "en-us"
+title: "Academic Article Database"
+theme: []
+
+# Content directory
+contentDir: "content"
+
+# Enable/disable features
+enableInlineShortcodes: true
+enableEmoji: true
+enableRobotsTXT: true
+canonifyURLs: true
+
+archetype:
+  article:
+    filename: "{{ .Name }}.md"
+
+# Taxonomy configuration
+taxonomies:
+  category: categories
+  tag: tags
+  series: series
+
+# Related content
+related:
+  threshold: 80
+  includeNewer: true
+  toLower: false
+  indices:
+    - name: "tags"
+      weight: 100
+    - name: "categories"
+      weight: 80
+
+# Menu configuration
+menu:
+  main:
+    - name: "Home"
+      url: "/"
+      weight: 1
+    - name: "Biological"
+      url: "/categories/biological/"
+      weight: 2
+    - name: "CS_AI"
+      url: "/categories/cs_ai/"
+      weight: 3
+    - name: "Analysis"
+      url: "/categories/comp_bio/analysis/"
+      weight: 4
+    - name: "Modelling"
+      url: "/categories/comp_bio/modelling/"
+      weight: 5
+    - name: "Search"
+      url: "/search/"
+      weight: 6
+
+# Custom params
+params:
+  site_name: "Academic Article Database"
+  description: "A curated collection of research papers in computational biology, AI, and related fields"
+  author: "Researcher"
+  author_url: ""
+  logo: "/images/logo.png"
+  favicon: "/favicon.ico"
+
+  # Theme colors
+  colors:
+    primary: "#0ea5e9"
+    secondary: "#10b981"
+    accent: "#8b5cf6"
+    dark: "#0f172a"
+
+  # Social links
+  social:
+    github: ""
+    twitter: ""
+    linkedin: ""
+
+  # Search settings
+  search:
+    enabled: true
+    type: "fuse"
+    threshold: 0.3
+
+  # PDF viewer settings
+  pdf:
+    default_scale: 1.5
+    show_toolbar: true
+    show_annotation_tools: true
+
+# Markup settings
+markup:
+  goldmark:
+    renderer:
+      unsafe: true  # Allow HTML in markdown
+  highlight:
+    noClasses: false
+    codeFences: true
+
+# Output formats
+outputs:
+  home:
+    - HTML
+    - JSON
+  page:
+    - HTML
+  section:
+    - HTML
+  taxonomy:
+    - HTML
+    - JSON
+  term:
+    - HTML
+    - JSON

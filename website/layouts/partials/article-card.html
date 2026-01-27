@@ -1,0 +1,71 @@
+{{/*
+  Usage: partial "article-card.html" (dict "Page" . "Ctx" $)
+*/}}
+{{ $ctx := .Ctx }}
+{{ $page := .Page }}
+{{ $year := $page.Params.year | default ($page.Date.Format "2006") }}
+
+{{ $categoryClass := "category-pill--biological" }}
+{{ if in $page.Params.categories "cs_ai" }}{{ $categoryClass = "category-pill--cs-ai" }}
+{{ else if in $page.Params.categories "comp_bio/analysis" }}{{ $categoryClass = "category-pill--analysis" }}
+{{ else if in $page.Params.categories "comp_bio/modelling" }}{{ $categoryClass = "category-pill--modelling" }}
+{{ end }}
+
+<div class="article-card group">
+  {{/* Category badge */}}
+  <div class="flex items-center justify-between mb-3">
+    {{ $category := index $page.Params.categories 0 | default "article" }}
+    <span class="article-card__category {{ $categoryClass }}">
+      {{ replace $category "_" " " | title }}
+    </span>
+    <span class="text-xs text-slate-500">{{ $year }}</span>
+  </div>
+
+  {{/* Title */}}
+  <a href="{{ $page.RelPermalink }}" class="article-card__title">
+    {{ $page.Title }}
+  </a>
+
+  {{/* Summary */}}
+  <p class="article-card__summary">
+    {{ $page.Description | default ($page.Summary | truncate 150) }}
+  </p>
+
+  {{/* Meta info */}}
+  <div class="article-card__meta">
+    {{ if $page.Params.source }}
+      <span class="truncate max-w-[120px]">{{ $page.Params.source }}</span>
+    {{ end }}
+    <span class="article-card__year">{{ $year }}</span>
+  </div>
+
+  {{/* Tags */}}
+  {{ if $page.Params.tags }}
+    <div class="article-card__tags mt-3">
+      {{ range first 3 $page.Params.tags }}
+        <span class="article-card__tag">{{ . }}</span>
+      {{ end }}
+      {{ if gt (len $page.Params.tags) 3 }}
+        <span class="article-card__tag">+{{ sub (len $page.Params.tags) 3 }}</span>
+      {{ end }}
+    </div>
+  {{ end }}
+
+  {{/* Actions */}}
+  <div class="flex items-center gap-2 mt-4 pt-3 border-t border-slate-100">
+    <a href="{{ $page.RelPermalink }}" class="btn--primary btn--sm flex-grow">
+      View Details
+    </a>
+    {{ if $page.Params.pdf_url }}
+      <a href="{{ $page.Params.pdf_url }}"
+         target="_blank" rel="noopener noreferrer"
+         class="btn--secondary btn--sm"
+         title="Open PDF">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+        </svg>
+      </a>
+    {{ end }}
+  </div>
+</div>

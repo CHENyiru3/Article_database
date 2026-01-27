@@ -1,0 +1,149 @@
+{{ define "main" }}
+<section class="py-8 min-h-[60vh]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {{/* Search header */}}
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-slate-900 mb-4">Search Articles</h1>
+
+      {{/* Search form */}}
+      <form action="/search/" method="get" class="search-bar">
+        <svg class="search-bar__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input type="text"
+               name="q"
+               value="{{ .Query }}"
+               placeholder="Search by title, abstract, topics, or author..."
+               class="search-bar__input"
+               autofocus>
+        <button type="submit" class="btn--primary absolute right-2 top-1/2 -translate-y-1/2">
+          Search
+        </button>
+      </form>
+    </header>
+
+    {{/* Active filters */}}
+    {{ if .Query }}
+      <div class="flex flex-wrap items-center gap-4 mb-6">
+        <span class="text-sm text-slate-500">
+          {{ if .Results }}
+            {{ len .Results }} results for "<span class="text-slate-900 font-medium">{{ .Query }}</span>"
+          {{ else }}
+            No results found for "<span class="text-slate-900 font-medium">{{ .Query }}</span>"
+          {{ end }}
+        </span>
+
+        {{ if .Param "tags" }}
+          <div class="tag-cloud">
+            {{ range $tag := .Param "tags" }}
+              <span class="tag-cloud__tag tag-cloud__tag--active">
+                {{ $tag }}
+              </span>
+            {{ end }}
+          </div>
+        {{ end }}
+      </div>
+
+      {{/* Search results */}}
+      {{ if .Results }}
+        <div class="space-y-6">
+          {{ range .Results }}
+            <article class="card p-6">
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex-grow">
+                  <div class="flex flex-wrap gap-2 mb-2">
+                    {{ range first 1 .Params.categories }}
+                      <span class="badge bg-primary-100 text-primary-800 capitalize">
+                        {{ replace . "_" " " | title }}
+                      </span>
+                    {{ end }}
+                    {{ if .Params.year }}
+                      <span class="badge bg-slate-100 text-slate-600">{{ .Params.year }}</span>
+                    {{ end }}
+                  </div>
+
+                  <a href="{{ .RelPermalink }}" class="text-xl font-semibold text-slate-900 hover:text-primary-600 transition-colors">
+                    {{ .Title }}
+                  </a>
+
+                  {{ if .Description }}
+                    <p class="mt-2 text-slate-600 line-clamp-2">
+                      {{ .Description }}
+                    </p>
+                  {{ end }}
+
+                  {{ if .Params.tags }}
+                    <div class="flex flex-wrap gap-1.5 mt-3">
+                      {{ range first 5 .Params.tags }}
+                        <span class="text-xs px-2 py-0.5 rounded bg-slate-100 text-slate-600">
+                          {{ . }}
+                        </span>
+                      {{ end }}
+                    </div>
+                  {{ end }}
+                </div>
+
+                <a href="{{ .RelPermalink }}" class="btn--primary btn--sm shrink-0">
+                  View
+                </a>
+              </div>
+            </article>
+          {{ end }}
+        </div>
+      {{ else }}
+        {{/* No results */}}
+        <div class="empty-state">
+          <svg class="empty-state__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          <h3 class="empty-state__title">No matching articles</h3>
+          <p class="empty-state__message">
+            Try different keywords or browse by category.
+          </p>
+
+          <div class="flex flex-wrap justify-center gap-3 mt-6">
+            <a href="/categories/biological/" class="category-pill category-pill--biological">
+              Biological
+            </a>
+            <a href="/categories/cs_ai/" class="category-pill category-pill--cs-ai">
+              CS_AI
+            </a>
+            <a href="/categories/comp_bio/analysis/" class="category-pill category-pill--analysis">
+              Analysis
+            </a>
+            <a href="/categories/comp_bio/modelling/" class="category-pill category-pill--modelling">
+              Modelling
+            </a>
+          </div>
+        </div>
+      {{ end }}
+    {{ else }}
+      {{/* Initial state - show popular tags */}}
+      <div class="mb-8">
+        <h2 class="text-lg font-semibold text-slate-900 mb-4">Popular Topics</h2>
+        <div class="tag-cloud">
+          {{ range first 30 (.Site.Taxonomies.tags.ByCount) }}
+            <a href="/search/?q={{ .Term | urlize }}"
+               class="tag-cloud__tag">
+              {{ .Term }}
+              <span class="tag-cloud__count">{{ .Count }}</span>
+            </a>
+          {{ end }}
+        </div>
+      </div>
+
+      {{/* Recent articles */}}
+      <div>
+        <h2 class="text-lg font-semibold text-slate-900 mb-4">Recent Articles</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {{ range first 6 (where .Site.RegularPages "Section" "articles") }}
+            {{ partial "article-card.html" (dict "Page" . "Ctx" $) }}
+          {{ end }}
+        </div>
+      </div>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
