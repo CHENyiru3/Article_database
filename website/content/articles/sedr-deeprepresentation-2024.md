@@ -1,12 +1,13 @@
 ---
 title: "SEDR DeepRepresentation 2024"
-date: 2026-01-28T00:57:08+08:00
+date: 2026-01-28T01:15:26+08:00
 draft: false
 categories: ["comp_bio/modelling"]
 tags: ["deep autoencoder", "variational graph autoencoder", "spatial clustering"]
 year: 2024
 description: |
   SEDR uses deep autoencoder with masked self-supervised learning for gene expression, coupled with variational graph autoencoder for spatial embedding. Achieves high clustering performance on Visium datasets.
+pdf_url: "/pdfs/Comp_Bio/Modelling/SEDR_DeepRepresentation_2024.pdf"
 ---
 
 SEDR uses deep autoencoder with masked self-supervised learning for gene expression, coupled with variational graph autoencoder for spatial embedding. Achieves high clustering performance on Visium datasets.

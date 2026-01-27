@@ -122,6 +122,10 @@ def create_frontmatter(article: dict, include_content: bool = False) -> str:
         for line in meta['summary'].split('\n'):
             lines.append(f'  {line.strip()}')
 
+    # Add PDF URL
+    if meta.get('pdf_url'):
+        lines.append(f"pdf_url: \"{meta['pdf_url']}\"")
+
     lines.append('---')
 
     # Add minimal content body (Hugo requires content after frontmatter)
