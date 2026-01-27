@@ -78,15 +78,15 @@
           {{/* Action buttons */}}
           <div class="flex flex-wrap gap-3 mt-6">
             {{ if .Params.pdf_url }}
-              <a href="{{ .Params.pdf_url }}"
-                 target="_blank" rel="noopener noreferrer"
-                 class="btn--primary">
+              <button type="button"
+                      onclick="document.getElementById('pdf-viewer-section').scrollIntoView({behavior: 'smooth'})"
+                      class="btn--primary">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                 </svg>
-                Open PDF
-              </a>
+                Read PDF
+              </button>
             {{ end }}
             <button type="button"
                     class="btn--secondary"
@@ -108,6 +108,41 @@
             </button>
           </div>
         </header>
+
+        {{/* Full-width PDF Viewer Section */}}
+        {{ if .Params.pdf_url }}
+          <section id="pdf-viewer-section" class="mb-8">
+            <div class="bg-slate-900 rounded-xl overflow-hidden">
+              <div class="flex items-center justify-between px-4 py-2 bg-slate-800 text-white">
+                <div class="flex items-center gap-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                  </svg>
+                  <span class="font-medium">PDF Reader</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <a href="{{ .Params.pdf_url }}"
+                     target="_blank" rel="noopener noreferrer"
+                     class="text-sm text-slate-300 hover:text-white transition-colors">
+                    Open in new tab
+                  </a>
+                  <a href="{{ .Params.pdf_url }}"
+                     download
+                     class="text-sm text-slate-300 hover:text-white transition-colors">
+                    Download
+                  </a>
+                </div>
+              </div>
+              <div class="h-[70vh]">
+                <iframe src="{{ .Params.pdf_url }}#view=FitH"
+                        class="w-full h-full"
+                        title="PDF Reader">
+                </iframe>
+              </div>
+            </div>
+          </section>
+        {{ end }}
 
         {{/* Content */}}
         <div class="prose prose-slate max-w-none">
@@ -133,19 +168,42 @@
 
       {{/* Sidebar */}}
       <aside class="lg:col-span-1 space-y-6">
-        {{/* PDF Viewer */}}
+        {{/* PDF Viewer - Embedded */}}
         {{ if .Params.pdf_url }}
           <div class="card p-4">
-            <h3 class="font-semibold text-slate-900 mb-3">PDF Preview</h3>
-            <div class="aspect-[3/4] bg-slate-100 rounded-lg flex items-center justify-center">
+            <h3 class="font-semibold text-slate-900 mb-3 flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+              </svg>
+              PDF Viewer
+            </h3>
+            {{/* Native PDF embed */}}
+            <div class="aspect-[3/4] bg-slate-100 rounded-lg overflow-hidden border border-slate-200">
+              <iframe src="{{ .Params.pdf_url }}#view=FitV"
+                      class="w-full h-full"
+                      style="min-height: 400px;"
+                      title="PDF Viewer">
+              </iframe>
+            </div>
+            <div class="mt-3 flex gap-2">
               <a href="{{ .Params.pdf_url }}"
                  target="_blank" rel="noopener noreferrer"
-                 class="flex flex-col items-center text-primary-600 hover:text-primary-700 p-8">
-                <svg class="w-16 h-16 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                        d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                 class="btn--primary btn--sm flex-1 text-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                 </svg>
-                <span class="text-sm font-medium">Click to open PDF</span>
+                Open Full
+              </a>
+              <a href="{{ .Params.pdf_url }}"
+                 download
+                 class="btn--outline btn--sm flex-1 text-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                Download
               </a>
             </div>
           </div>
