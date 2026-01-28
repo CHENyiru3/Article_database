@@ -72,8 +72,16 @@ def parse_log_md(log_content: str) -> list[dict]:
         else:
             metadata['categories'] = ['others']
 
-        # Generate PDF URL
-        metadata['pdf_url'] = f'/pdfs/{path.strip()}'
+        # Generate PDF URL (use lowercase for directory paths, keep original filename)
+        path_parts = path.strip().split('/')
+        if len(path_parts) >= 2:
+            # Lowercase directory parts, keep filename as-is
+            dir_parts = [p.lower() for p in path_parts[:-1]]
+            filename = path_parts[-1]
+            pdf_path = '/'.join(dir_parts + [filename])
+        else:
+            pdf_path = path.strip().lower()
+        metadata['pdf_url'] = f'/pdfs/{pdf_path}'
 
         # Create slug from filename
         slug = filename.replace('.pdf', '').lower().replace(' ', '-').replace('_', '-')
