@@ -168,47 +168,6 @@
 
       {{/* Sidebar */}}
       <aside class="lg:col-span-1 space-y-6">
-        {{/* PDF Viewer - Embedded */}}
-        {{ if .Params.pdf_url }}
-          <div class="card p-4">
-            <h3 class="font-semibold text-slate-900 mb-3 flex items-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-              </svg>
-              PDF Viewer
-            </h3>
-            {{/* Native PDF embed */}}
-            <div class="aspect-[3/4] bg-slate-100 rounded-lg overflow-hidden border border-slate-200">
-              <iframe src="{{ .Params.pdf_url }}#view=FitV"
-                      class="w-full h-full"
-                      style="min-height: 400px;"
-                      title="PDF Viewer">
-              </iframe>
-            </div>
-            <div class="mt-3 flex gap-2">
-              <a href="{{ .Params.pdf_url }}"
-                 target="_blank" rel="noopener noreferrer"
-                 class="btn--primary btn--sm flex-1 text-center">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                </svg>
-                Open Full
-              </a>
-              <a href="{{ .Params.pdf_url }}"
-                 download
-                 class="btn--outline btn--sm flex-1 text-center">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                </svg>
-                Download
-              </a>
-            </div>
-          </div>
-        {{ end }}
-
         {{/* Tags */}}
         {{ if .Params.tags }}
           <div class="card p-4">
